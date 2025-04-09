@@ -11,11 +11,17 @@ class BioLibCLI(cmd.Cmd):
         super().__init__()
         self.app = BioLib()
 
-    def do_pattern_count(self, text: str, pattern: str):
+    def do_count_pattern(self, text: str, pattern: str):
         """
         Get count of pattern occurrences in a text
         """
-        self.app.pattern_count(text, pattern)
+        self.app.count_pattern(text, pattern)
+
+    def do_match_pattern(self, text: str, pattern: str):
+        """
+        Get indexes of matches of pattern occurrences in a text
+        """
+        self.app.match_pattern(text, pattern)
 
     def do_frequency_map(self, text: str, pattern_length: str):
         """

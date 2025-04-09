@@ -1,10 +1,17 @@
 class BioLib:
-    def pattern_count(self, text: str, pattern: str) -> int:
+    def count_pattern(self, text: str, pattern: str) -> int:
         count = 0
         for i in range(len(text)-len(pattern)+1):
             if text[i:i+len(pattern)] == pattern:
                 count += 1
         return count
+
+    def match_pattern(self, text: str, pattern: str) -> list[int]:
+        matches = []
+        for i in range(len(text)-len(pattern)+1):
+            if text[i:i+len(pattern)] == pattern:
+                matches.append(i)
+        return matches
 
     def frequency_map(self, text: str, pattern_length: int) -> dict[str, int]:
         frequency_map = {}

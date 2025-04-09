@@ -7,7 +7,8 @@ Run the script with python interpreter.
 Use Command Line Interface to get the results.
 
 ### Available commands:
-- `pattern_count [text: str, pattern: str]`
+- `count_pattern [text: str, pattern: str]`
+- `match_pattern [text: str, pattern: str]`
 - `frequency_map [text: str, pattern_length: int]`
 - `frequent_words [text: str, pattern_length: int]`
 - `quit`
