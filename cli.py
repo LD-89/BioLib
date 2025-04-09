@@ -13,13 +13,13 @@ class BioLibCLI(cmd.Cmd):
 
     def do_pattern_count(self, text: str, pattern: str):
         """
-        Find count of pattern occurrences in a text
+        Get count of pattern occurrences in a text
         """
         self.app.pattern_count(text, pattern)
 
     def do_frequency_map(self, text: str, pattern_length: str):
         """
-        Map every pattern occurrence in a text
+        Get a map every pattern occurrence in a text
         """
         self.app.frequency_map(text, int(pattern_length))
 
@@ -28,6 +28,18 @@ class BioLibCLI(cmd.Cmd):
         Get a list of the most frequent words in a text
         """
         self.app.frequent_words(text, int(pattern_length))
+
+    def do_complement(self, text: str):
+        """
+        Get a literal complement of a dna sequence
+        """
+        self.app.complement(text)
+
+    def do_reverse_complement(self, text: str):
+        """
+        Get a reverse complement of a dna sequence
+        """
+        self.app.reverse_complement(text)
 
     def do_quit(self, line):
         """Quit the CLI."""
