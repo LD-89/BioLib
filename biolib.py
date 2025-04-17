@@ -1,4 +1,12 @@
+from genome import Genome, GenomeFactory
+
+
 class BioLib:
+    genome: Genome
+
+    def set_genome(self, sequence: str, genome_type: str = 'linear'):
+        self.genome = GenomeFactory.create_genome(genome_type, sequence)
+
     def count_pattern(self, text: str, pattern: str) -> int:
         count = 0
         for i in range(len(text)-len(pattern)+1):
@@ -50,3 +58,19 @@ class BioLib:
 
     def reverse_complement(self, text: str):
         return self.complement(text[::-1])
+
+    def count_symbol(self, symbol):
+        symbol_matches = []
+        sequence_length = self.genome.get_sequence_length()
+        extended_sequence = self.genome.get_extended_sequence()
+        symbol_matches[0] = self.count_pattern(extended_sequence[:sequence_length//2], symbol)
+
+        for i in range(1, sequence_length):
+            symbol_matches[i] = symbol_matches[i-1]
+            if extended_sequence[i-1] == symbol:
+                symbol_matches[i] -= 1
+            if extended_sequence[i+(sequence_length//2)-1] == symbol:
+                symbol_matches[i] += 1
+
+        return symbol_matches
+
