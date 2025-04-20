@@ -121,5 +121,45 @@ class BioLib:
                 hamming_distance += 1
         return hamming_distance
 
+    def get_motifs_matrix(self, motifs):
+        count = {}
+        k = len(motifs[0])
+        for symbol in "ACGT":
+            count[symbol] = [0 for j in range(k)]
+
+        t = len(motifs)
+        for i in range(t):
+            for j in range(k):
+                symbol = motifs[i][j]
+                count[symbol][j] += 1
+
+        return count
+
+    def get_profile_matrix(self, motifs):
+        t = len(motifs)
+        profile = {}
+        motifs_matrix = self.get_motifs_matrix(motifs)
+        for nucleotide, counts in motifs_matrix.items():
+            profile[nucleotide] = []
+            for count in counts:
+                profile[nucleotide].append(count / t)
+
+        return profile
+
+    def get_motifs_consensus(self, motifs):
+        k = len(motifs[0])
+        count = self.get_motifs_matrix(motifs)
+        consensus = ""
+        for j in range(k):
+            m = 0
+            frequentSymbol = ""
+            for symbol in "ACGT":
+                if count[symbol][j] > m:
+                    m = count[symbol][j]
+                    frequentSymbol = symbol
+            consensus += frequentSymbol
+        return consensus
+
+
 
 
