@@ -1,4 +1,4 @@
-from genome import Genome, GenomeFactory
+from biolib.core.genome import Genome, GenomeFactory
 
 1
 class BioLib:
