@@ -1,25 +1,43 @@
 from genome import Genome, GenomeFactory
 
-
+1
 class BioLib:
     genome: Genome
 
     def set_genome(self, sequence: str, genome_type: str = 'linear'):
         self.genome = GenomeFactory.create_genome(genome_type, sequence)
 
-    def count_pattern(self, text: str, pattern: str) -> int:
+    def count_pattern(self, pattern: str) -> int:
         count = 0
-        for i in range(len(text)-len(pattern)+1):
-            if text[i:i+len(pattern)] == pattern:
+        pattern_length = len(pattern)
+        for i in range(len(self.genome.get_sequence())-pattern_length+1):
+            if self.genome.get_sequence()[i:i+pattern_length] == pattern:
                 count += 1
         return count
 
-    def match_pattern(self, text: str, pattern: str) -> list[int]:
-        matches = []
-        for i in range(len(text)-len(pattern)+1):
-            if text[i:i+len(pattern)] == pattern:
-                matches.append(i)
-        return matches
+    def count_approximate_pattern(self, pattern: str, max_difference: int) -> int:
+        count = 0
+        pattern_length = len(pattern)
+        for i in range(len(self.genome.get_sequence())-pattern_length+1):
+            if self.calculate_hamming_distance(self.genome.get_sequence()[i:i+pattern_length], pattern) <= max_difference:
+                count += 1
+        return count
+
+    def match_pattern(self, pattern: str) -> list[int]:
+        positions = []
+        pattern_length = len(pattern)
+        for i in range(len(self.genome.get_sequence())-pattern_length+1):
+            if self.genome.get_sequence()[i:i+pattern_length] == pattern:
+                positions.append(i)
+        return positions
+
+    def match_approximate_pattern(self, pattern: str, max_difference: int) -> list[int]:
+        positions = []
+        pattern_length = len(pattern)
+        for i in range(len(self.genome.get_sequence())-pattern_length+1):
+            if self.calculate_hamming_distance(self.genome.get_sequence()[i:i+pattern_length], pattern) <= max_difference:
+                positions.append(i)
+        return positions
 
     def frequency_map(self, text: str, pattern_length: int) -> dict[str, int]:
         frequency_map = {}
@@ -73,4 +91,35 @@ class BioLib:
                 symbol_matches[i] += 1
 
         return symbol_matches
+
+    def get_skew(self):
+        skew = [0]
+        modifiers = {
+            'C': -1,
+            'G': 1,
+        }
+        for i, nucleotide in enumerate(self.genome.get_sequence()):
+            skew.append(skew[i] + modifiers.get(nucleotide, 0))
+        return skew
+
+    def get_minimum_skew(self):
+        positions = []
+        minimum_skew = 0
+        skew = self.get_skew()
+        for i, skew_value in enumerate(skew):
+            if skew_value < minimum_skew:
+                minimum_skew = skew_value
+                positions = [i]
+            elif skew_value == minimum_skew:
+                positions.append(i)
+        return positions
+
+    def calculate_hamming_distance(self, sequence_1, sequence_2):
+        hamming_distance = 0
+        for i, nucleotide in enumerate(sequence_1):
+            if nucleotide != sequence_2[i]:
+                hamming_distance += 1
+        return hamming_distance
+
+
 
