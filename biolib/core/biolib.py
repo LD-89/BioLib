@@ -1,3 +1,5 @@
+import math
+
 from biolib.core.genome import Genome, GenomeFactory
 
 1
@@ -159,6 +161,169 @@ class BioLib:
                     frequentSymbol = symbol
             consensus += frequentSymbol
         return consensus
+
+    def get_motifs_score(self, motifs):
+        consensus = self.get_motifs_consensus(motifs)
+        score = 0
+
+        for i, nucleotide in enumerate(consensus):
+            for j, motif in enumerate(motifs):
+                if motif[i] != nucleotide:
+                    score += 1
+
+        return score
+
+    def get_motifs_entropy(self, motifs):
+        profile = self.get_profile_matrix(motifs)
+        entropy = 0
+        for symbol in "ACGT":
+            for count in profile[symbol]:
+                if count != 0:
+                    entropy -= count * math.log2(count)
+        return entropy
+
+
+    def translate_rna_to_amino_acid(self):
+        # amino acid code in a format of {codon_1: {codon_2: {codon_3: amino_acid}}}
+        amino_acid_code = {
+            'A': {
+                'A': {
+                    'A': 'K',
+                    'C': 'N',
+                    'G': 'K',
+                    'U': 'N',
+                },
+                'C': {
+                    'A': 'T',
+                    'C': 'T',
+                    'G': 'T',
+                    'U': 'T',
+                },
+                'G': {
+                    'A': 'R',
+                    'C': 'S',
+                    'G': 'R',
+                    'U': 'S',
+                },
+                'U': {
+                    'A': 'I',
+                    'C': 'I',
+                    'G': 'M',
+                    'U': 'I',
+                },
+            },
+            'C': {
+                'A': {
+                    'A': 'Q',
+                    'C': 'H',
+                    'G': 'Q',
+                    'U': 'H',
+                },
+                'C': {
+                    'A': 'P',
+                    'C': 'P',
+                    'G': 'P',
+                    'U': 'P',
+                },
+                'G': {
+                    'A': 'R',
+                    'C': 'R',
+                    'G': 'R',
+                    'U': 'R',
+                },
+                'U': {
+                    'A': 'L',
+                    'C': 'L',
+                    'G': 'L',
+                    'U': 'L',
+                },
+            },
+            'G': {
+                'A': {
+                    'A': 'E',
+                    'C': 'D',
+                    'G': 'E',
+                    'U': 'D',
+                },
+                'C': {
+                    'A': 'A',
+                    'C': 'A',
+                    'G': 'A',
+                    'U': 'A',
+                },
+                'G': {
+                    'A': 'G',
+                    'C': 'G',
+                    'G': 'G',
+                    'U': 'G',
+                },
+                'U': {
+                    'A': 'V',
+                    'C': 'V',
+                    'G': 'V',
+                    'U': 'V',
+                },
+            },
+            'U': {
+                'A': {
+                    'A': '*',
+                    'C': 'Y',
+                    'G': '*',
+                    'U': 'Y',
+                },
+                'C': {
+                    'A': 'S',
+                    'C': 'S',
+                    'G': 'S',
+                    'U': 'S',
+                },
+                'G': {
+                    'A': '*',
+                    'C': 'C',
+                    'G': 'W',
+                    'U': 'C',
+                },
+                'U': {
+                    'A': 'L',
+                    'C': 'F',
+                    'G': 'L',
+                    'U': 'F',
+                },
+            },
+        }
+        amino_acids = {
+            'A': ('Alanine', 'Ala'),
+            'C': ('Cysteine', 'Cys'),
+            'D': ('Aspartic acid', 'Asp'),
+            'E': ('Glutamic acid', 'Glu'),
+            'F': ('Phenylalanine', 'Phe'),
+            'G': ('Glycine', 'Gly'),
+            'H': ('Histodie', 'His'),
+            'I': ('Isoleucine', 'Ile'),
+            'K': ('Lysine', 'Lys'),
+            'L': ('Leucine', 'Leu'),
+            'M': ('Methionine', 'Met'),
+            'N': ('Asparagine', 'Asn'),
+            'P': ('Proline', 'Pro'),
+            'Q': ('Glutamine', 'Gln'),
+            'R': ('Arginine', 'Arg'),
+            'S': ('Serine', 'Ser'),
+            'T': ('Threonine', 'Thr'),
+            'V': ('Valine', 'Val'),
+            'W': ('Tryptophan', 'Trp'),
+            'Y': ('Tyrosine', 'Tyr'),
+            '*': ('Stop codon', 'Stop'),
+
+        }
+        rna_sequence = self.genome.get_sequence().upper()
+        amino_acid_sequence = ''
+        for i in range(0, len(rna_sequence), 3):
+            codon = rna_sequence[i:i+3]
+            amino_acid_sequence += amino_acid_code[codon[0]][codon[1]][codon[2]]
+        return amino_acid_sequence
+
+    def gibbs_sampler(self):
+        pass
 
 
 
