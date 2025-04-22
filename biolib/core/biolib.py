@@ -313,7 +313,6 @@ class BioLib:
             'W': ('Tryptophan', 'Trp'),
             'Y': ('Tyrosine', 'Tyr'),
             '*': ('Stop codon', 'Stop'),
-
         }
         rna_sequence = self.genome.get_sequence().upper()
         amino_acid_sequence = ''
